@@ -1,0 +1,29 @@
+body {
+    background-color: #122d53;
+    margin: 0px;
+    overflow: hidden;
+}
+
+a {
+    color:#0078ff;
+}
+
+#info {
+    position: absolute;
+    top: 10px; width: 100%;
+    color: #ffffff;
+    padding: 5px;
+    font-family: Monospace;
+    font-size: 13px;
+    text-align: center;
+    z-index:100;
+}
+
+a {
+    color: #ff0080;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #0080ff;
+}
