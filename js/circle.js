@@ -51,30 +51,27 @@ function createMultipleCircles(N,layerN,radiusIncrement,two) {
         radiusIncrement-=Math.round(d3.randomUniform(radiusIncrement/5,radiusIncrement/2)())
     }
     return [arcCollection,inArcCollection]
-}
+}   
 
 function animateCircles(frameCount,inArcCollection,switchLimit,speedLimit,rand0001) {
-    for (indArcs of inArcCollection){
+    inArcCollection.forEach(function(indArcs) {
         for (var i in indArcs){
-            var initSpeed=rand0001()*Math.PI
+            var initSpeed=rand0001()*Math.PI;
             for (var j in indArcs[i]){
                 if (indArcs[i][j].rotation>Math.PI*2){
                     indArcs[i][j].rotation=0;
                 }
                 indArcs[i][j].rotation+=initSpeed;
-                initSpeed+=rand0001()*0.1*Math.PI
+                initSpeed+=rand0001()*0.1*Math.PI;
             }
         }
-        if(frameCount%switchLimit==0){
+        if(frameCount % switchLimit==0){
             // console.log("swap")
-            var ph=speedLimit[0]
-            speedLimit[0]=-speedLimit[1]
-            speedLimit[1]=-ph
+            var ph=speedLimit[0];
+            speedLimit[0]=-speedLimit[1];
+            speedLimit[1]=-ph;
             rand0001=d3.randomUniform(speedLimit[0],speedLimit[1]);
         }
-    }
-
-
-
+    });
 
 }

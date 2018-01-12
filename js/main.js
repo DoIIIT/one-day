@@ -28,17 +28,16 @@ $(function() {
     aInfo=createMultipleCircles(10,layerN,radiusIncrement,two)
     arcCollection=aInfo[0];
     inArcCollection=aInfo[1];
-    for (circle of arcCollection){
-        console.log(circle)
-        container.add(circle)
-    }
+    arcCollection.forEach(function(circle){
+        console.log(circle);
+        container.add(circle);
+    });
 
-
-    var speedLimit=[0,0.001]
+    var speedLimit=[0,0.001];
     var rand0001=d3.randomUniform(speedLimit[0],speedLimit[1]);
 
     two.bind('update', function(frameCount) {
-        animateCircles(frameCount,inArcCollection,240,speedLimit,rand0001)
+        animateCircles(frameCount,inArcCollection,240,speedLimit,rand0001);
         // console.log(frameCount)
     }).play();
 
