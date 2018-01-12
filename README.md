@@ -6,3 +6,9 @@ Ambient artwork for d.Holodeck 2x2 Display
 * VPN to U-M network, then `ssh chuanche@doiiitgal.sites.uofmhosting.net`
 * Put the code under `/data/doiiitgal/public_html`
 * Ask the marketing team to point the 4Win system to the the doiiitgal site URL. 
+
+# Authors
+* Shiqing (Licia) He 
+
+# Special Thanks
+* Thanks [BrowserStack](http://browserstack.com/) for supporting a virtual machine to us to test our website against older versions of IEs (IE11, IE10). 
