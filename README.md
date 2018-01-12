@@ -11,4 +11,4 @@ Ambient artwork for d.Holodeck 2x2 Display
 * Shiqing (Licia) He 
 
 # Special Thanks
-* Thanks [BrowserStack](http://browserstack.com/) for supporting a virtual machine to us to test our website against older versions of IEs (IE11, IE10). 
+* Thanks [BrowserStack](http://browserstack.com/) for supporting a virtual machine for us to test our repo against older versions of IEs (e.g., IE11, IE10). 
