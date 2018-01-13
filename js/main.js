@@ -2,82 +2,80 @@
  * Created by heslicia on 10/19/2017.
  */
 $(function() {
-
-
-    var bgc="white";
+    //set up
+    var bgc=colorComb[colorCombOrder[0]].b;
     var type = /(canvas|webgl)/.test(url.type) ? url.type : 'webgl';
     var two = new Two({
         type: Two.Types[type],
         fullscreen: true,
         autostart: true
     }).appendTo(document.body);
-
+    //create background
     var background = two.makeRectangle(two.width / 2, two.height / 2, two.width, two.height);
     background.noStroke();
-    background.fill = bgc;
+    background.cInRgb=d3.rgb(bgc)
+    background.updateColor=function () {
+        c=this.cInRgb.toString()
+        this.fill=c
+    }
+    background.updateColor()
     background.name = 'background';
-    var bgGroup=two.makeGroup(background);
 
-
+    //make circles
     var container = two.makeGroup();
     container.translation.set(two.width / 2, two.height / 2);
-
-    var layerN=100;
-    var radiusIncrement=Math.max(two.width,two.height)/1.5/layerN;
-    // console.log(radiusIncrement)
-    aInfo=createMultipleCircles(10,layerN,radiusIncrement,two)
-    arcCollection=aInfo[0];
-    inArcCollection=aInfo[1];
-    arcCollection.forEach(function(circle){
-        console.log(circle);
-        container.add(circle);
+    var tweenGroups={};
+    var tweenCollections={};
+    var tags =  ["start","middle","end","color"];
+    tags.forEach(function(tag){
+        tweenGroups[tag]=new TWEEN.Group()
+        tweenCollections[tag]={}
     });
+    cbInfo=[1]
 
-    var speedLimit=[0,0.001];
-    var rand0001=d3.randomUniform(speedLimit[0],speedLimit[1]);
 
+
+    function createOneSun(setting) {
+        var layerN=setting["layerN"];
+        // var radiusIncrement=3*Math.max(two.width,two.height)/Math.pow(layerN,2);
+        var radiusIncrement=Math.max(two.width,two.height)/1.5/layerN;
+        var circleN=setting["circleN"]
+        var sunStorage=createMultipleCircles_flat(circleN,layerN,radiusIncrement,container,two,colorScale);//sunStorage={"arcGroups":[],"arcStorage":{"opacity":xx,"arc":twoArc},"lengthStorage":{1:{1:3}}}
+        // set up animation
+        var midRepeat=setting["midRepeat"];
+        createMovements(sunStorage,tweenGroups,tweenCollections,background,setting);
+        endIndex=sunStorage["endIndex"];
+        var startNode=ringChain(sunStorage["lengthStorage"],tweenCollections,endIndex,midRepeat,cbInfo,setting)
+        startNode.start()
+        // new TWEEN.Tween(arc,tweenGroup)
+        fullTween=new TWEEN.Tween(container)
+            .to({"rotation":+2*Math.PI},600000)
+            .start()
+            .repeat(Infinity)
+    }
+
+    createOneSun(setting2)
+
+
+
+    //animation binding
     two.bind('update', function(frameCount) {
-        animateCircles(frameCount,inArcCollection,240,speedLimit,rand0001);
-        // console.log(frameCount)
-    }).play();
+        var tags = ["start","middle","end","color"];
+        tags.forEach(function(tag){
+            tweenGroups[tag].update();
+        });
+        TWEEN.update();
 
+    }).play();
+    // svg=d3.select("svg")
+    // svg.selectAll("text")
+    //     .data([1])
+    //     .enter()
+    //     .append("text")
+    //     .text("abc")
+    //     .attr("fill","red")
+    //     .attr("font-size", "500px")
+    //     .attr("x",two.width/2)
+    //     .attr("y",two.height/2)
 });
 
-
-Two.prototype.makeSquiggle = function(width, height, phi) {
-
-    var amt = 64;
-
-    var squiggle = this.makeCurve(
-        _.map(_.range(amt), function(i) {
-            var pct = i / (amt - 1);
-            var theta = pct * Math.PI * 2 * phi + Math.PI / 2;
-            var x = width * pct - width / 2;
-            var y = height / 2 * Math.sin(theta);
-            return new Two.Anchor(x, y);
-        }),
-        true
-    );
-
-    return squiggle;
-
-};
-
-Two.prototype.makeNonagon = function(width, height, sides) {
-
-    width /= 2;
-    height /= 2;
-
-    var shape = this.makePath(
-        _.map(_.range(sides), function(i) {
-            var pct = i / sides;
-            var theta = Math.PI * 2 * pct - Math.PI / 2;
-            var x = width * Math.cos(theta);
-            var y = height * Math.sin(theta);
-            return new Two.Anchor(x, y);
-        })
-    );
-
-    return shape;
-
-};
