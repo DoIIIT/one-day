@@ -14,7 +14,7 @@ var colorComb={
 }
 
 // colorCombOrder=["totalDark","dark","blueMorning","redOrange","dawn"]
-colorCombOrder=["blueMorning","redOrange","dawn","totalDark","dark"]
+var colorCombOrder=["blueMorning","redOrange","dawn","totalDark","dark"]
 var colorScale = d3.scaleSequential(colorComb[colorCombOrder[0]].s);
 
 setting1={
