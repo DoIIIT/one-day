@@ -3,78 +3,59 @@
  * functions for creating and animating circles
  */
 
-
-function addPieSlices(innerRadius,outerRadius,divideN,colorScale,arcs,indArcs,two) {
+function addPieSlice_flat(innerRadius, outerRadius,divideN,colorScale, arcs, arcStorage, circleIndex, layerIndex, two){
     var rand01=d3.randomUniform(0,1);
     var section=2*Math.PI/divideN;
-    var indArcG=[]
-    for(var i =0;i<divideN;i++){
-        var c =colorScale(rand01());
-        var arc=two.makeArcSegment(0,0,innerRadius,outerRadius
-            ,i*section,(i+1)*section);
-        arc.fill=c;
-        arc.opacity=d3.randomUniform(0.2,0.8)();
+    for(var arcIndex =0;arcIndex<divideN;arcIndex++){
+        var key=circleIndex+","+layerIndex+","+arcIndex
+        var c=d3.rgb(colorScale(rand01()))
+        // var arc=two.makeArcSegment(0,0,innerRadius,outerRadius,0,section);
+        var arc=two.makeArcSegment(0,0,innerRadius,outerRadius,0,section);
+        // arc.fill=c;
+        arc.opacity= 0
         arc.noStroke();
-        // arc.rotation = 30
+        arc.cInRgb=c
+        arc.cInRgb["arc"]=arc
+        arc.updateColor=function () {
+            this.fill=this.cInRgb.toString()
+            // console.log("update color",this.fill)
+        }
+        arc.updateColor()
         arcs.add(arc)
-        indArcG.push(arc)
+        arcStorage[key]={"opacity":d3.randomUniform(0.2,0.8)(),"arc":arc};
+        // arcStorage[key]={"opacity":1,"arc":arc};
     }
-    indArcs.push(indArcG);
-    return arc
+
 }
 
-function createOneCircle(layerN,radiusIncrement,two) {
-    var arcs=two.makeGroup();
-    var indArcs=[];
-    var innerRadius=0;
-    var outerRadius=radiusIncrement;
-    for (var i=0;i<layerN;i++){
-        var divideN=Math.round(d3.randomUniform(2,15)());
-        var arcG=addPieSlices(innerRadius,outerRadius,divideN,colorScale,arcs,indArcs,two)
-        innerRadius+=radiusIncrement;
-        outerRadius+=radiusIncrement;
+function createOneCircle_flat(layerN,radiusIncrement,two,lengthStorage,arcStorage,circleIndex,colorScale) {
+    var oneCircle = two.makeGroup();
+    var innerRadius = 0;
+    var outerRadius = radiusIncrement;
+    lengthStorage[circleIndex]={}
+    for (var layerIndex = 0; layerIndex < layerN; layerIndex++) {
+        //for each layer
+        var divideN = Math.round(d3.randomUniform(2, 15)());
+        lengthStorage[circleIndex][layerIndex]=divideN
+        addPieSlice_flat(innerRadius, outerRadius,divideN,colorScale, oneCircle, arcStorage, circleIndex, layerIndex, two)
+        innerRadius += radiusIncrement;
+        outerRadius += radiusIncrement;
     }
-    return [arcs,indArcs]
+
+    return oneCircle
 }
 
-function createMultipleCircles(N,layerN,radiusIncrement,two) {
-    var arcCollection=[];
-    var inArcCollection=[];
-    for (i=0;i<N;i++){
-        var arcs, indArcs;
-        var circleP=createOneCircle(layerN,radiusIncrement,two)
-        arcs=circleP[0];
-        indArcs=circleP[1]
-        arcCollection.push(arcs)
-        inArcCollection.push(indArcs)
-        N-=Math.round(d3.randomUniform(N/5,N/2)())
-        radiusIncrement-=Math.round(d3.randomUniform(radiusIncrement/5,radiusIncrement/2)())
+function createMultipleCircles_flat(circleN,layerN,radiusIncrement,container,two,colorScale) {
+    /*
+    container is a two.group
+     */
+    masterStorage={"circleGroups":[],"arcStorage":{},"lengthStorage":{}}
+    for (var circleIdx=0;circleIdx<circleN;circleIdx++){
+        var oneCircle=createOneCircle_flat(layerN,radiusIncrement,two,masterStorage["lengthStorage"],masterStorage["arcStorage"],circleIdx,colorScale)
+        masterStorage["circleGroups"].push(oneCircle)
+        layerN-=Math.round(d3.randomUniform(layerN/5,layerN/3)())
+        radiusIncrement-=Math.round(d3.randomUniform(radiusIncrement/5,radiusIncrement/3)())
+        container.add(oneCircle)
     }
-    return [arcCollection,inArcCollection]
-}
-
-function animateCircles(frameCount,inArcCollection,switchLimit,speedLimit,rand0001) {
-    for (indArcs of inArcCollection){
-        for (var i in indArcs){
-            var initSpeed=rand0001()*Math.PI
-            for (var j in indArcs[i]){
-                if (indArcs[i][j].rotation>Math.PI*2){
-                    indArcs[i][j].rotation=0;
-                }
-                indArcs[i][j].rotation+=initSpeed;
-                initSpeed+=rand0001()*0.1*Math.PI
-            }
-        }
-        if(frameCount%switchLimit==0){
-            // console.log("swap")
-            var ph=speedLimit[0]
-            speedLimit[0]=-speedLimit[1]
-            speedLimit[1]=-ph
-            rand0001=d3.randomUniform(speedLimit[0],speedLimit[1]);
-        }
-    }
-
-
-
-
+    return masterStorage
 }
