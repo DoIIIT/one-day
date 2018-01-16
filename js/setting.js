@@ -17,7 +17,7 @@ var colorComb={
 var colorCombOrder=["blueMorning","redOrange","dawn","totalDark","dark"]
 var colorScale = d3.scaleSequential(colorComb[colorCombOrder[0]].s);
 
-setting1={
+var setting1={
     //quick change, less complicated, debug version
     "layerN":10,
     "circleN":3,
@@ -27,7 +27,7 @@ setting1={
     "fastDuration":[400,600]
 }
 
-setting2={
+var setting2={
     //quick change, less complicated, debug version
     "layerN":80,
     "circleN":2,//`1
