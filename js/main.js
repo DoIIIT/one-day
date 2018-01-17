@@ -10,15 +10,16 @@ $(function() {
         fullscreen: true,
         autostart: true
     }).appendTo(document.body);
+
     //create background
     var background = two.makeRectangle(two.width / 2, two.height / 2, two.width, two.height);
     background.noStroke();
-    background.cInRgb=d3.rgb(bgc)
-    background.updateColor=function () {
-        c=this.cInRgb.toString()
-        this.fill=c
+    background.cInRgb = d3.rgb(bgc);
+    background.updateColor = function () {
+        var c = this.cInRgb.toString();
+        this.fill = c;
     }
-    background.updateColor()
+    background.updateColor();
     background.name = 'background';
 
     //make circles
@@ -26,23 +27,35 @@ $(function() {
     container.translation.set(two.width / 2, two.height / 2);
     var tweenGroups={};
     var tweenCollections={};
+
+    // Four animation groups. 
+    // The display will go through these four stages. 
     var tags =  ["start","middle","end","color"];
     tags.forEach(function(tag){
-        tweenGroups[tag]=new TWEEN.Group()
-        tweenCollections[tag]={}
+        tweenGroups[tag]=new TWEEN.Group();
+        tweenCollections[tag]={};
     });
-    cbInfo=[1]
-
-
+    cbInfo=[1];
 
     function createOneSun(setting) {
-        var layerN=setting["layerN"];
+        var layerN = setting["layerN"];
         // var radiusIncrement=3*Math.max(two.width,two.height)/Math.pow(layerN,2);
-        var radiusIncrement=Math.max(two.width,two.height)/1.5/layerN;
-        var circleN=setting["circleN"]
-        var sunStorage=createMultipleCircles_flat(circleN,layerN,radiusIncrement,container,two,colorScale);//sunStorage={"arcGroups":[],"arcStorage":{"opacity":xx,"arc":twoArc},"lengthStorage":{1:{1:3}}}
+        
+        // The thickness of the 
+        var radiusIncrement = Math.max(two.width, two.height)/ (3 * layerN);
+        var circleN = setting["circleN"];
+
+        var sunStorage = createMultipleCircles_flat(
+            circleN,
+            layerN,
+            radiusIncrement,
+            container,
+            two,
+            colorScale
+        );
+        //sunStorage={"arcGroups":[],"arcStorage":{"opacity":xx,"arc":twoArc},"lengthStorage":{1:{1:3}}}
         // set up animation
-        var midRepeat=setting["midRepeat"];
+        var midRepeat = setting["midRepeat"];
         createMovements(sunStorage,tweenGroups,tweenCollections,background,setting);
         endIndex=sunStorage["endIndex"];
         var startNode=ringChain(sunStorage["lengthStorage"],tweenCollections,endIndex,midRepeat,cbInfo,setting)
@@ -54,13 +67,14 @@ $(function() {
             .repeat(Infinity)
     }
 
-    createOneSun(setting2)
+    createOneSun(setting3)
 
 
 
     //animation binding
     two.bind('update', function(frameCount) {
-        var tags = ["start","middle","end","color"];
+        // var tags = ["start","middle","end","color"];
+        var tags = ["start", "middle","color"];
         tags.forEach(function(tag){
             tweenGroups[tag].update();
         });

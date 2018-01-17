@@ -9,13 +9,19 @@ function createTween(key,arc,toObj,duration,tweenGroup,tweenCollection) {
         // .easing(TWEEN.Easing.Circular.InOut)
 }
 
-
 function createSME(key,arc,opacity,duration,fastDuration,arcIdx,layerIndex,circleIndex,tweenGroups,tweenCollections) {
     /*
     helper function to set up s m e
      */
     eToObj={"opacity": 0, "rotation": 0}
-    createTween(key,arc,eToObj,duration/(layerIndex+1)/(arcIdx+1)/(circleIndex+1),tweenGroups["end"],tweenCollections["end"])
+    createTween(
+        key,
+        arc,
+        eToObj,
+        duration/(layerIndex+1)/(arcIdx+1)/(circleIndex+1),
+        tweenGroups["end"],
+        tweenCollections["end"]
+    );
 
     mToObj={"rotation":+2*Math.PI}
     createTween(key,arc,mToObj,duration*(arcIdx+1)/(layerIndex+1)/(circleIndex+1)* 15,tweenGroups["middle"],tweenCollections["middle"]);
@@ -23,6 +29,7 @@ function createSME(key,arc,opacity,duration,fastDuration,arcIdx,layerIndex,circl
     sToObj={"opacity": opacity}//, "rotation": +Math.PI * (arcIdx+1)
     createTween(key,arc,sToObj,fastDuration/2/(layerIndex+1),tweenGroups["start"],tweenCollections["start"])
 }
+
 function createBGtween(background,backgroundC,tweenCollections,durationRange) {
 
     // c=parseInt(rgb2hex(backgroundC).slice(1),16)

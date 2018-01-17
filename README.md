@@ -9,6 +9,7 @@ Ambient artwork for d.Holodeck 2x2 Display
 
 # Authors
 * Shiqing (Licia) He 
+* Chuan-Che (Jeff) Huang
 
 # Special Thanks
 * Thanks [BrowserStack](http://browserstack.com/) for supporting a virtual machine for us to test our repo against older versions of IEs (e.g., IE11, IE10). 
