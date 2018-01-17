@@ -324,7 +324,7 @@ Viz.prototype.createSME = function(
     fastDuration,
     arcIdx,
     layerIndex,
-    circleIndex,
+    circleIndex
 ) {
     /*
     helper function to set up s m e
