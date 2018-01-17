@@ -1,5 +1,6 @@
 function Viz(options) {
     
+
     this.type =  /(canvas|webgl)/.test(url.type) ? url.type : 'webgl';
 
     this.two = new Two({
@@ -47,6 +48,10 @@ function Viz(options) {
     this.initAnimStages();
     this.loadSettings(options.settings);
     this.createOneSun();
+
+    this.stats = new Stats();
+    this.stats.showPanel(0);    
+    document.body.appendChild( this.stats.dom );
 }
 
 Viz.prototype.initBackground = function() {
@@ -113,10 +118,12 @@ Viz.prototype.play = function() {
     // set to true.
     var self = this;
     self.two.bind('update', function(frameCount) {
+        self.stats.begin();
         self.animStages.forEach(function(stage){
             self.tweenGroups[stage].update();
         });
         TWEEN.update();
+        self.stats.end();
     }).play();
 }
 
@@ -324,7 +331,7 @@ Viz.prototype.createSME = function(
     fastDuration,
     arcIdx,
     layerIndex,
-    circleIndex,
+    circleIndex
 ) {
     /*
     helper function to set up s m e

@@ -59,7 +59,7 @@ var setting2 = {
 
 var setting3 = {
     //quick change, less complicated, debug version
-    "layerN": 80,
+    "layerN": 70,
     "circleN": 2,//`1
     "midRepeat": 1,
     "bgDuration": [10000,20000],
