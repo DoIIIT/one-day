@@ -109,7 +109,7 @@ Viz.prototype.loadSettings = function(settings) {
 
     // This also controls the number of overlapped arcs generated in 
     // one circle group. 
-    this.randomDivideN = d3.randomUniform(2, 5);
+    this.randomDivideN = d3.randomUniform(2, 3);
 }
 
 Viz.prototype.play = function() {
